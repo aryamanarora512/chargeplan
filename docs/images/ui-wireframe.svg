@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 660" width="1000" height="660" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" role="img" aria-label="Wireframe of the planned ChargePlan web UI: a plan setup form on the left and results on the right">
+  <title>ChargePlan wireframe (planned web UI)</title>
+  <style>
+    .muted { fill: #59636e; font-size: 11px; }
+    .label { fill: #59636e; font-size: 11px; }
+    .body { fill: #1f2328; font-size: 12px; }
+    .h { fill: #1f2328; font-size: 15px; font-weight: 600; }
+    .sub { fill: #1f2328; font-size: 12px; font-weight: 600; }
+    .input { fill: #ffffff; stroke: #d0d7de; }
+    .th { fill: #59636e; font-size: 11px; font-weight: 600; }
+    .btn { fill: #ffffff; stroke: #d0d7de; }
+    .btn-primary { fill: #0969da; }
+    .btn-text { fill: #1f2328; font-size: 13px; font-weight: 600; }
+    .btn-text-primary { fill: #ffffff; font-size: 13px; font-weight: 600; }
+    .link { fill: #0969da; font-size: 12px; }
+  </style>
+
+  <rect x="0.5" y="0.5" width="999" height="659" rx="12" fill="#ffffff" stroke="#d0d7de"/>
+
+  <!-- Header -->
+  <text x="24" y="36" style="font-size: 20px; font-weight: 700; fill: #1f2328">ChargePlan</text>
+  <text x="976" y="30" text-anchor="end" class="muted">WIREFRAME · planned web UI (Milestones 2–3)</text>
+  <text x="976" y="45" text-anchor="end" class="muted">Numbers are from the engine's run of the synthetic hand-checkable example</text>
+
+  <!-- ============ Left: plan setup ============ -->
+  <rect x="16" y="64" width="360" height="580" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="32" y="92" class="h">1 · Plan setup</text>
+
+  <text x="32" y="118" class="label">Site time zone</text>
+  <rect x="32" y="124" width="328" height="26" rx="5" class="input"/>
+  <text x="40" y="141" class="body">America/New_York</text>
+
+  <text x="32" y="168" class="label">Planning horizon</text>
+  <rect x="32" y="174" width="152" height="26" rx="5" class="input"/>
+  <text x="40" y="191" class="body">Oct 15, 18:00</text>
+  <text x="196" y="191" class="body" text-anchor="middle">→</text>
+  <rect x="208" y="174" width="152" height="26" rx="5" class="input"/>
+  <text x="216" y="191" class="body">Oct 16, 08:00</text>
+
+  <text x="32" y="218" class="label">EV charging allowance</text>
+  <rect x="32" y="224" width="152" height="26" rx="5" class="input"/>
+  <text x="40" y="241" class="body">10 kW</text>
+  <text x="208" y="218" class="label">Charging efficiency (assumption)</text>
+  <rect x="208" y="224" width="152" height="26" rx="5" class="input"/>
+  <text x="216" y="241" class="body">90 %</text>
+  <text x="32" y="266" class="muted" font-style="italic">Power reserved for EV charging, not the building's rating.</text>
+
+  <text x="32" y="294" class="sub">Energy rates ($/kWh)</text>
+  <text x="40" y="312" class="th">From</text>
+  <text x="140" y="312" class="th">To</text>
+  <text x="260" y="312" class="th">$/kWh</text>
+  <rect x="32" y="318" width="328" height="22" fill="#ffffff"/>
+  <text x="40" y="333" class="body">18:00</text><text x="140" y="333" class="body">00:00</text><text x="260" y="333" class="body">0.30</text>
+  <text x="40" y="355" class="body">00:00</text><text x="140" y="355" class="body">06:00</text><text x="260" y="355" class="body">0.12</text>
+  <rect x="32" y="362" width="328" height="22" fill="#ffffff"/>
+  <text x="40" y="377" class="body">06:00</text><text x="140" y="377" class="body">08:00</text><text x="260" y="377" class="body">0.30</text>
+  <text x="32" y="404" class="link">+ add rate band</text>
+
+  <text x="32" y="434" class="sub">Vehicles</text>
+  <text x="40" y="452" class="th">Name</text>
+  <text x="110" y="452" class="th">Arrive</text>
+  <text x="170" y="452" class="th">Depart</text>
+  <text x="232" y="452" class="th">kWh to add</text>
+  <text x="306" y="452" class="th">Max kW</text>
+  <rect x="32" y="458" width="328" height="22" fill="#ffffff"/>
+  <text x="40" y="473" class="body">Van A</text><text x="110" y="473" class="body">18:00</text><text x="170" y="473" class="body">08:00</text><text x="232" y="473" class="body">18</text><text x="306" y="473" class="body">10</text>
+  <text x="40" y="495" class="body">Van B</text><text x="110" y="495" class="body">18:00</text><text x="170" y="495" class="body">08:00</text><text x="232" y="495" class="body">18</text><text x="306" y="495" class="body">10</text>
+  <text x="32" y="524" class="link">+ add vehicle (up to 10)</text>
+
+  <rect x="32" y="586" width="140" height="38" rx="6" class="btn"/>
+  <text x="102" y="610" text-anchor="middle" class="btn-text">Load sample</text>
+  <rect x="184" y="586" width="176" height="38" rx="6" class="btn-primary"/>
+  <text x="272" y="610" text-anchor="middle" class="btn-text-primary">Generate plan</text>
+
+  <!-- ============ Right: results ============ -->
+  <rect x="392" y="64" width="592" height="580" rx="10" fill="#ffffff" stroke="#d0d7de"/>
+  <text x="408" y="92" class="h">2 · Results</text>
+
+  <rect x="408" y="104" width="560" height="40" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="424" y="129" style="font-size: 14px; font-weight: 600; fill: #1a7f37">✓ All 2 vehicles can be ready by departure</text>
+
+  <rect x="408" y="156" width="180" height="64" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="420" y="176" class="label">Vehicles ready</text>
+  <text x="420" y="206" style="font-size: 22px; font-weight: 700; fill: #1f2328">2 / 2</text>
+  <rect x="598" y="156" width="180" height="64" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="610" y="176" class="label">Modeled energy cost</text>
+  <text x="610" y="206" style="font-size: 22px; font-weight: 700; fill: #1f2328">$4.80</text>
+  <rect x="788" y="156" width="180" height="64" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="800" y="176" class="label">vs. charge-on-arrival ($12.00)</text>
+  <text x="800" y="206" style="font-size: 22px; font-weight: 700; fill: #1a7f37">$7.20 lower</text>
+
+  <!-- Chart -->
+  <text x="408" y="246" class="sub">Charging power over the night (kW)</text>
+  <rect x="700" y="237" width="10" height="10" fill="#0969da"/><text x="714" y="246" class="muted">Van A</text>
+  <rect x="756" y="237" width="10" height="10" fill="#8250df"/><text x="770" y="246" class="muted">Van B</text>
+  <line x1="812" y1="242" x2="834" y2="242" stroke="#cf222e" stroke-width="2" stroke-dasharray="5 3"/><text x="838" y="246" class="muted">Site limit</text>
+  <rect x="898" y="237" width="10" height="10" fill="#fff8c5" stroke="#d4a72c"/><text x="912" y="246" class="muted">Cheap rate</text>
+
+  <rect x="651.4" y="258" width="231.5" height="142" fill="#fff8c5"/>
+  <text x="535.7" y="272" text-anchor="middle" class="muted">$0.30/kWh</text>
+  <text x="767.1" y="272" text-anchor="middle" class="muted">$0.12/kWh</text>
+  <text x="921.4" y="272" text-anchor="middle" class="muted">$0.30</text>
+
+  <!-- Bars: one of several equally cheap optimal schedules (10 kW = 115 px) -->
+  <g fill="#0969da">
+    <rect x="671.7" y="285" width="17" height="115"/>
+    <rect x="691.0" y="285" width="17" height="115"/>
+    <rect x="729.6" y="285" width="17" height="115"/>
+    <rect x="806.7" y="285" width="17" height="115"/>
+  </g>
+  <g fill="#8250df">
+    <rect x="768.1" y="285" width="17" height="115"/>
+    <rect x="787.4" y="285" width="17" height="115"/>
+    <rect x="826.0" y="285" width="17" height="115"/>
+    <rect x="845.3" y="285" width="17" height="115"/>
+  </g>
+  <line x1="420" y1="285" x2="960" y2="285" stroke="#cf222e" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="424" y="297" class="muted" style="fill: #cf222e">10 kW site limit</text>
+  <line x1="420" y1="400" x2="960" y2="400" stroke="#8c959f"/>
+  <text x="420" y="416" class="muted">18:00</text>
+  <text x="651.4" y="416" text-anchor="middle" class="muted">00:00</text>
+  <text x="882.9" y="416" text-anchor="middle" class="muted">06:00</text>
+  <text x="960" y="416" text-anchor="end" class="muted">08:00</text>
+
+  <!-- Vehicle status table -->
+  <text x="408" y="444" class="th">Vehicle</text>
+  <text x="500" y="444" class="th">Departs</text>
+  <text x="620" y="444" class="th">Needs</text>
+  <text x="700" y="444" class="th">Gets</text>
+  <text x="780" y="444" class="th">Ready</text>
+  <line x1="408" y1="450" x2="968" y2="450" stroke="#d0d7de"/>
+  <text x="408" y="468" class="body">Van A</text><text x="500" y="468" class="body">Oct 16, 08:00</text><text x="620" y="468" class="body">18.0 kWh</text><text x="700" y="468" class="body">18.0 kWh</text><text x="780" y="468" class="body" style="fill: #1a7f37">✓ yes</text>
+  <text x="408" y="490" class="body">Van B</text><text x="500" y="490" class="body">Oct 16, 08:00</text><text x="620" y="490" class="body">18.0 kWh</text><text x="700" y="490" class="body">18.0 kWh</text><text x="780" y="490" class="body" style="fill: #1a7f37">✓ yes</text>
+
+  <!-- Explanation -->
+  <rect x="408" y="504" width="560" height="66" rx="8" fill="#f6f8fa"/>
+  <text x="420" y="524" class="body">The plan draws 40.0 kWh from the grid to add 36.0 kWh to batteries (90% assumed),</text>
+  <text x="420" y="541" class="body">for a modeled $4.80, all at the night's lowest rate. Charging on arrival would cost $12.00.</text>
+  <text x="420" y="558" class="muted">Energy charges only: not demand charges, fees or taxes, so not a utility-bill estimate.</text>
+
+  <rect x="408" y="586" width="190" height="38" rx="6" class="btn-primary"/>
+  <text x="503" y="610" text-anchor="middle" class="btn-text-primary">Edit and recalculate</text>
+  <rect x="610" y="586" width="120" height="38" rx="6" class="btn"/>
+  <text x="670" y="610" text-anchor="middle" class="btn-text">Export CSV</text>
+  <rect x="742" y="586" width="110" height="38" rx="6" class="btn"/>
+  <text x="797" y="610" text-anchor="middle" class="btn-text">Save run</text>
+</svg>

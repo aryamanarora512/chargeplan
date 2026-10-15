@@ -1,0 +1,3 @@
+# Runtime dependencies for the planning engine (versions tested on 2026-10-15).
+numpy==2.5.4
+scipy==1.18.1

@@ -1,0 +1,17 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Secrets and local config (commit .env.example, never .env)
+.env
+
+# Frontend (later milestones)
+node_modules/
+dist/
+
+# OS / editors
+.DS_Store
+.vscode/
+.idea/
