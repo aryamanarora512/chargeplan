@@ -48,6 +48,10 @@ planning and what-if tool**. Whether that is useful beyond existing tools is exa
 4. **[Hypothesis] A plan is actionable.** ChargePlan doesn't control chargers. Someone must be willing to set timers or
    power limits by hand to follow it.
 
+*Update 2026-10-26:* a check against a real EV business rate (PG&E BEV) suggests the value may come less from cheap hours
+and more from **choosing the smallest power level that keeps every vehicle ready**. See
+[problem-analysis.md](problem-analysis.md) and [market-sizing.md](market-sizing.md).
+
 ## Approaches considered
 
 | Approach | Why it's not enough on its own |

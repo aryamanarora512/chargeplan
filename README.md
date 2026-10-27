@@ -103,6 +103,8 @@ The full explanation, with a two-slot example you can solve on paper, is in **[d
   slowest was **4.0 ms** over 100 runs. Measured on an Apple M3 Pro (18 GB) running macOS 26.3.1 with Python 3.13.5,
   NumPy 2.5.4, and SciPy 1.18.1, on 2026-10-15. The provisional target is under 2 s. Reproduce with `python -m chargeplan.benchmark`.
 - **Customer evidence:** none yet. See [docs/discovery.md](docs/discovery.md).
+- **Market:** a first-pass sizing suggests a niche (US serviceable market roughly $0.03M–$4.4M/yr). See
+  [docs/market-sizing.md](docs/market-sizing.md) and [docs/problem-analysis.md](docs/problem-analysis.md).
 
 ## What it does *not* do (yet, or on purpose)
 
@@ -132,6 +134,8 @@ backend/
   tests/               pytest suite
 docs/
   product-brief.md     problem, customer hypotheses, alternatives, success criteria, wireframe
+  problem-analysis.md  sharper problem statement, tested against a real EV tariff
+  market-sizing.md     TAM / SAM / SOM with every assumption labeled
   model.md             the math, explained with small examples
   discovery.md         customer interview plan and log
   decision-log.md      why things are the way they are

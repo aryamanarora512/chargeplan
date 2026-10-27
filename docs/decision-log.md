@@ -2,6 +2,19 @@
 
 Short entries: what we decided, why, and what would change our mind. Newest first.
 
+### 2026-10-26: Problem and market analysis (no code changes)
+
+**Benchmark against a shared timer, not only charge-on-arrival.** A 9 pm timer captures most of the cheap-hours saving,
+so charge-on-arrival overstates ChargePlan's value. Planned: add a timer baseline before claiming savings in the UI.
+
+**Candidate feature: "smallest allowance that keeps everyone ready."** On PG&E's BEV rate, power is billed as a kW
+subscription and the overnight energy price is flat. Right-sizing was the planner's distinct value in our model run
+(about $447/yr for 6 vans). Build it only if interviews confirm fleets pay for, and can change, their power level.
+
+**Market stance:** on current evidence this is a niche (US SAM roughly $0.03M–$4.4M/yr). Treat it as a portfolio
+project and possible feature or advisor tool, not a venture pitch, unless interviews or better data change the inputs
+in [market-sizing.md](market-sizing.md).
+
 ### 2026-10-15: Milestone 1 (Python engine)
 
 **LP with SciPy/HiGHS, not a hand-written solver or integer program.**

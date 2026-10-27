@@ -24,6 +24,11 @@ Ordinary EV owners can help test **usability**, but they don't validate **fleet 
 Good follow-ups: "How do you know that?", "What did that cost you?", "Who else is involved in that decision?"
 Avoid leading questions such as "Would it be useful if…?"
 
+**Added 2026-10-26** (from [problem-analysis.md](problem-analysis.md)):
+- How is your charging power billed: demand charge, subscription, or neither? What level do you pay for?
+- Do your chargers share power automatically, or does each one charge at full speed?
+- Do you know each vehicle's energy need, or its battery % and route length? Does a telematics system report it?
+
 ## Rules
 
 - Only Aryaman arranges and conducts interviews. Nothing in this repo sends messages on anyone's behalf.
