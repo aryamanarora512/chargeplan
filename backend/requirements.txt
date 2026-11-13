@@ -1,3 +1,7 @@
-# Runtime dependencies for the planning engine (versions tested on 2026-10-15).
+# Runtime dependencies (versions tested on 2026-11-13).
+# Planning engine:
 numpy==2.5.4
 scipy==1.18.1
+# Savings analysis and report charts:
+pandas==3.1.1
+matplotlib==3.11.2

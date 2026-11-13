@@ -1,4 +1,4 @@
-"""Price-blind benchmark policy: earliest departure first, as soon as possible.
+"""Benchmark policies: earliest departure first, as soon as possible (or after a timer).
 
 In every slot, the plugged-in vehicles that still need energy are served in
 order of departure time (ties broken by vehicle ID). Each gets as much as its
@@ -33,3 +33,13 @@ def earliest_departure_first(plan: PlanInput, avail: np.ndarray) -> np.ndarray:
             still_needed[v] -= amount
             site_left -= amount
     return x
+
+
+def shared_timer(plan: PlanInput, avail: np.ndarray, first_slot: int) -> np.ndarray:
+    """A site-wide charging timer: nothing charges before `first_slot`, then
+    earliest-departure-first as above. This is the realistic do-it-yourself
+    alternative to an optimizer, so savings should also be measured against it.
+    A vehicle that leaves before the timer starts gets nothing."""
+    waiting = avail.copy()
+    waiting[:, :first_slot] = False
+    return earliest_departure_first(plan, waiting)

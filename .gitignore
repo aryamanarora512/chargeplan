@@ -15,3 +15,6 @@ dist/
 .DS_Store
 .vscode/
 .idea/
+
+# Generated analysis reports (may contain your own fleet data)
+reports/

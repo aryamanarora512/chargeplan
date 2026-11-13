@@ -93,12 +93,39 @@ The full explanation, with a two-slot example you can solve on paper, is in **[d
 | `evening_conflict` | Impossible: each van is fine alone, but they compete for shared power |
 | `full_depot` | Largest supported size: 10 vans × 48 half-hour slots |
 
+## Savings estimator (data analysis)
+
+Give ChargePlan a history of charging sessions (a CSV: who plugged in, when, for how long, how many kWh). It replays
+**every night** three ways and estimates yearly savings with an uncertainty range:
+
+- **ChargePlan (optimized):** the linear program.
+- **Shared timer:** every charger waits for one clock time, then earliest departure first. This is the realistic
+  do-it-yourself alternative.
+- **Charge on arrival:** plug in and go.
+
+```bash
+python -m chargeplan.analysis.report --demo --out reports                 # synthetic 6-van history
+python -m chargeplan.analysis.report --sessions my_sessions.csv --out reports
+```
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/analysis/savings-dark.svg"><img alt="Estimated annual savings with 90% intervals, synthetic data" src="docs/analysis/savings-light.svg"></picture>
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/analysis/readiness-synthetic_tou-dark.svg"><img alt="Share of nights every van is ready by charging allowance, synthetic data" src="docs/analysis/readiness-synthetic_tou-light.svg"></picture>
+
+On this **synthetic** history, ChargePlan's big saving is against charge-on-arrival. Against a simple timer it saves
+little or nothing in dollars. Its real edge is **power**: it readies every van on every night with 18 kW, while a
+midnight timer still leaves a van short on 2% of nights at 36 kW. That's the power-sizing story from [docs/problem-analysis.md](docs/problem-analysis.md), now
+measured night by night. Full results: [docs/analysis/summary.md](docs/analysis/summary.md). Real datasets to try:
+[docs/data-sources.md](docs/data-sources.md).
+
 ## Evaluation (measured, not estimated)
 
-- **Tests:** 83 passing (`python -m pytest -q`). They cover cost and efficiency arithmetic, every constraint, the worked
+- **Tests:** 100 passing (`python -m pytest -q`). They cover cost and efficiency arithmetic, every constraint, the worked
   example, flat rates, zero energy, impossible requests, baseline-fails-but-optimizer-succeeds, tariff gaps and overlaps,
   bad numbers, daylight-saving rejection, solver timeouts and errors, and totals matching the per-slot schedule.
-  Constraint checks in the tests are written independently of the engine's own checker.
+  Constraint checks in the tests are written independently of the engine's own checker. The savings estimator adds
+  tests for conservative time rounding, time-zone conversion, the timer baseline, comparable-nights-only savings, and
+  the bootstrap.
 - **Speed:** at the largest supported size (10 vehicles × 48 slots), the median `run_plan` time was **3.4 ms** and the
   slowest was **4.0 ms** over 100 runs. Measured on an Apple M3 Pro (18 GB) running macOS 26.3.1 with Python 3.13.5,
   NumPy 2.5.4, and SciPy 1.18.1, on 2026-10-15. The provisional target is under 2 s. Reproduce with `python -m chargeplan.benchmark`.
@@ -123,16 +150,25 @@ backend/
       models.py        input data types (vehicles, rate bands, plan)
       validate.py      input checks -> list of plain-language issues
       slots.py         30-minute slots and the plugged-in grid
-      baseline.py      charge-on-arrival, earliest-departure-first benchmark
+      baseline.py      benchmarks: charge on arrival, and a shared timer
       optimizer.py     the linear program (SciPy linprog + HiGHS)
       checks.py        independent schedule verification and simple impossibility proofs
       summary.py       costs, comparison, plain-language explanation
       planner.py       run_plan(): the one entry point that ties it all together
+    analysis/          savings estimator: replay many nights, bootstrap, charts
+      tariffs.py       daily time-of-use tariffs (synthetic, PG&E BEV-1)
+      sessions.py      session CSV -> one plan per night (conservative rounding)
+      synthetic.py     invented 6-van history for demos and tests
+      estimate.py      replay, savings on comparable nights, bootstrap, power sweep
+      charts.py        report charts (light and dark SVG)
+      report.py        python -m chargeplan.analysis.report
     scenarios.py       synthetic demo scenarios
     cli.py             terminal report
     benchmark.py       latency measurement
   tests/               pytest suite
 docs/
+  analysis/            demo savings report (synthetic data): summary.md + charts
+  data-sources.md      public datasets to analyze, real vs. synthetic
   product-brief.md     problem, customer hypotheses, alternatives, success criteria, wireframe
   problem-analysis.md  sharper problem statement, tested against a real EV tariff
   market-sizing.md     TAM / SAM / SOM with every assumption labeled
@@ -147,6 +183,7 @@ docs/
 |---|---|---|
 | 0 | Product brief and discovery plan | ✅ Done |
 | 1 | Python engine + tests | ✅ Done |
+| 1b | Savings estimator: multi-night replay, timer baseline, bootstrap, report charts | ✅ Done |
 | 2 | FastAPI + one editable React form, real results | Next |
 | 3 | Charts, error and infeasible states, comparison, CSV export, mobile layout | Planned |
 | 4 | Saved plans in PostgreSQL, Docker Compose, CI on the full stack | Planned |

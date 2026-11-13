@@ -2,6 +2,24 @@
 
 Short entries: what we decided, why, and what would change our mind. Newest first.
 
+### 2026-11-13: Savings estimator
+
+**"Predict savings" = replay history + bootstrap, not machine learning.** Given one night's inputs, the engine computes
+cost exactly in milliseconds, so a model trained to imitate it would add error and nothing else. The real uncertainty is
+*which nights come next*, so we replay every historical night and bootstrap the average. ML becomes worth it later, for
+forecasting tomorrow's energy needs from real history, and only if it beats a simple average on held-out dates.
+
+**Savings are reported against a shared timer too, and only on comparable nights.** This was the gap flagged on
+2026-10-26. A night where a baseline leaves a van short is excluded from dollar savings and counted as a readiness failure.
+
+**Historical timestamps are rounded conservatively** (arrival up, departure down) by the data adapter, never silently by
+the engine, so replay never assumes more charging time than really existed.
+
+**Charts are static SVG from matplotlib**, in a light and a dark version, with one color per policy everywhere.
+Every chart has a table twin in `summary.md`. The web UI will draw interactive versions from the same numbers later.
+
+**New dependencies:** pandas and matplotlib, for analysis only. The engine still needs just NumPy and SciPy.
+
 ### 2026-10-26: Problem and market analysis (no code changes)
 
 **Benchmark against a shared timer, not only charge-on-arrival.** A 9 pm timer captures most of the cheap-hours saving,
