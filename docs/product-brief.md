@@ -83,15 +83,13 @@ previous run → export the schedule as CSV.
 
 ## Wireframe (planned web UI)
 
-See [`images/ui-wireframe.svg`](images/ui-wireframe.svg). One page, two areas; on a phone they stack in a single column.
+See [`images/ui-wireframe.svg`](images/ui-wireframe.svg). The design rules, exact copy, and colors are in
+[`DESIGN.md`](../DESIGN.md) (updated 2026-11-15; this replaces the earlier card-based wireframe).
 
-1. **Plan setup:** site time zone, horizon start and end, EV charging allowance (kW, with help text: "power reserved
-   for EV charging, not your building's rating"), efficiency (%), a rate-band table ($/kWh), a vehicle table (name, arrive, depart,
-   kWh to add, max kW), **Load sample** and **Generate plan**.
-2. **Results:** a status banner ("All 2 vehicles ready" or "Not every vehicle can be ready"), three numbers (ready count,
-   modeled energy cost, comparison with the baseline when comparable), a power-over-time chart with the site limit and
-   tariff bands, a vehicle status table (requested, delivered, ready, departure), a plain-language explanation, and
-   **Edit and recalculate**, **Export CSV**, and **Save run**. After an edit, old results are marked "out of date" until recomputed.
+One screen: a two-line intro, inputs on the left, and the result on the right. The result is a one-line verdict
+("Both vans ready for $8.40."), the night board (vans in rows, half-hours in columns, pricier hours shaded, charging in
+amber), and a table of the same numbers. An example plan is already solved when the app opens, so a new user sees a
+result before typing anything.
 
 ## Customer discovery
 

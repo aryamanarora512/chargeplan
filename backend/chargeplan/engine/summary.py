@@ -108,7 +108,7 @@ def compare(optimized: ScheduleSummary | None, baseline: ScheduleSummary | None)
     if not baseline.all_ready:
         short = len(baseline.vehicles) - baseline.ready_count
         return not_comparable(
-            f"The baseline leaves {short} vehicle(s) short, so its cost is not comparable."
+            f"Charging on arrival leaves {short} van{'s' if short != 1 else ''} short, so its cost isn't comparable."
         )
     if abs(optimized.total_grid_kwh - baseline.total_grid_kwh) > TOL_KWH * len(optimized.vehicles):
         return not_comparable("The two plans deliver different amounts of energy, so their costs are not comparable.")
@@ -117,10 +117,10 @@ def compare(optimized: ScheduleSummary | None, baseline: ScheduleSummary | None)
     if abs(savings) < MONEY_NOISE:
         savings = 0.0
     pct = savings / baseline.total_cost if baseline.total_cost > 0 else None
-    return Comparison(True, optimized.total_cost, baseline.total_cost, savings, pct, "Both plans ready every vehicle with the same energy.")
+    return Comparison(True, optimized.total_cost, baseline.total_cost, savings, pct, "Both plans ready every van with the same energy.")
 
 
-BASELINE_NAME = "charging as soon as vehicles arrive, earliest departure first"
+BASELINE_NAME = "charging as soon as vans arrive, earliest departure first"
 COST_CAVEAT = (
     "Costs cover charging energy at the entered rates only (no demand charges, fixed fees or taxes), "
     "so they are not a utility-bill estimate."
@@ -140,13 +140,13 @@ def explain(
     if status == "invalid":
         return ["Some inputs need attention before a plan can be calculated."]
     if status == "infeasible":
-        return ["Not every vehicle can be ready by its departure with these inputs.", COST_CAVEAT]
+        return ["Not every van can be ready by its departure.", COST_CAVEAT]
     if status == "solver_limit":
         return ["The solver stopped at its time limit. That does NOT mean the plan is impossible; try recalculating."]
     if status == "solver_error" or optimized is None:
         return ["The solver ran into a problem, so no plan is shown. That does NOT mean the plan is impossible."]
 
-    lines = [f"All {n} vehicle{'s' if n != 1 else ''} can be ready by departure under these inputs."]
+    lines = [f"All {n} vans can be ready by departure." if n != 1 else "The van can be ready by departure."]
     added = sum(vs.delivered_kwh for vs in optimized.vehicles)
     lines.append(
         f"The optimized plan draws {optimized.total_grid_kwh:.1f} kWh from the grid to add {added:.1f} kWh to batteries "
@@ -157,20 +157,20 @@ def explain(
     prices = slot_prices(slots)
     x = np.array(optimized.grid_kwh)
     if prices.max() - prices.min() < MONEY_NOISE:
-        lines.append("The rate is the same all night, so changing when vehicles charge cannot change the energy cost.")
+        lines.append("The rate is the same all night, so changing when vans charge cannot change the energy cost.")
     elif optimized.total_grid_kwh > TOL_KWH:
         cheapest = prices.min()
         share = x[:, prices <= cheapest + MONEY_NOISE].sum() / optimized.total_grid_kwh
         lines.append(f"{share:.0%} of that energy is scheduled at the lowest rate of the night (${cheapest:.2f}/kWh).")
 
     lines.append(
-        f"Total charging power peaks at {max(optimized.site_kw):.1f} kW, within the {plan.site_limit_kw:g} kW EV charging allowance."
+        f"Total charging power peaks at {max(optimized.site_kw):.1f} kW, within the {plan.site_limit_kw:g} kW power limit."
     )
 
     if comparison and comparison.comparable:
         if comparison.savings > 0:
             lines.append(
-                f"The baseline ({BASELINE_NAME}) also readies every vehicle but costs ${comparison.baseline_cost:.2f}: "
+                f"The baseline ({BASELINE_NAME}) also readies every van but costs ${comparison.baseline_cost:.2f}: "
                 f"${comparison.savings:.2f} more for the same energy."
             )
         else:

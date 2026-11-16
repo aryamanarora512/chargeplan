@@ -53,7 +53,7 @@ def check_schedule(plan: PlanInput, slots: list[Slot], avail: np.ndarray, x: np.
     for slot in slots:
         if x[:, slot.index].sum() > site_cap + TOL_KWH:
             violations.append(
-                f"Total charging above the {plan.site_limit_kw:g} kW site allowance at {slot.start.strftime('%H:%M')}."
+                f"Total charging above the {plan.site_limit_kw:g} kW power limit at {slot.start.strftime('%H:%M')}."
             )
 
     delivered, ready, shortfall = [], [], []
@@ -90,7 +90,7 @@ def find_simple_impossibilities(plan: PlanInput, avail: np.ndarray) -> list[str]
     total_most = sum(min(plan.site_limit_kw, float(max_kw[avail[:, t]].sum())) * DT_HOURS for t in range(avail.shape[1]))
     if total_need > total_most + TOL_KWH:
         reasons.append(
-            f"Together the vehicles need {total_need:.2f} kWh from the grid, but at most {total_most:.2f} kWh "
-            f"can be delivered overnight with a {plan.site_limit_kw:g} kW site allowance and these charger limits."
+            f"Together the vans need {total_need:.2f} kWh from the grid, but the {plan.site_limit_kw:g} kW power limit "
+            f"and these chargers can deliver at most {total_most:.2f} kWh tonight."
         )
     return reasons

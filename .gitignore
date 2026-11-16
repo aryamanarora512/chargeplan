@@ -18,3 +18,6 @@ dist/
 
 # Generated analysis reports (may contain your own fleet data)
 reports/
+
+# Local editor/agent tooling
+.claude/

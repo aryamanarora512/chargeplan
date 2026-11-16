@@ -141,7 +141,7 @@ def test_baseline_failure_is_not_scenario_infeasibility():
     # The baseline delivers less energy, so a dollar comparison would mislead.
     assert not result.comparison.comparable
     assert result.comparison.savings is None and result.comparison.savings_pct is None
-    assert "leaves 1 vehicle(s) short" in result.comparison.note
+    assert "leaves 1 van short" in result.comparison.note
     assert "no cost saving is claimed" in " ".join(result.explanation)
 
 
@@ -164,7 +164,7 @@ def test_total_energy_beyond_site_capacity_is_explained():
     vehicles = [van(f"v{i}", START, "2026-10-15 20:00", 9, 10) for i in range(3)]
     result = run_plan(plan_for(START, END, vehicles=vehicles))
     assert result.status == "infeasible"
-    assert result.infeasibility_reasons[0].startswith("Together the vehicles need 30.00 kWh")
+    assert result.infeasibility_reasons[0].startswith("Together the vans need 30.00 kWh")
 
 
 def test_combined_conflict_does_not_invent_a_bottleneck():

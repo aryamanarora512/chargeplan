@@ -1,29 +1,48 @@
 # ChargePlan
 
-**Plan tonight's EV charging for a small fleet: will every vehicle be ready, and what will it cost?**
+**Plan tonight's EV charging for a small fleet: will every van be ready, and what will it cost?**
 
-ChargePlan is a planning simulator for a depot with 3–10 electric vehicles. You enter when each vehicle arrives and leaves,
-how much energy it needs, the electricity rates through the night, and how much power the depot can spend on charging.
-ChargePlan works out **when to charge each vehicle** so they're all ready at the **lowest modeled energy cost**, without
-going over the depot's power limit. It also tells you plainly when that's impossible.
+ChargePlan is a planning simulator for a depot with 3–10 electric vans. You enter when each van arrives and leaves,
+how much energy it needs, the electricity rates through the night, and the depot's power limit. ChargePlan works out
+**when to charge each van** so they're all ready at the **lowest modeled energy cost**, without going over the limit.
+It also says plainly when that's impossible.
 
-> **Status: early prototype.** Milestone 1 of 5 (the Python planning engine) is done. All data is **synthetic**.
-> No customer interviews have been completed yet. ChargePlan does not connect to or control real chargers.
+> **Status: prototype.** Milestones 0–2 are done: the Python engine, a savings estimator, and a working web app.
+> All data is **synthetic**. No customer interviews have been completed yet. ChargePlan does not control real chargers.
 
-![Wireframe of the planned ChargePlan web UI](docs/images/ui-wireframe.svg)
-<sub>*Wireframe of the web UI planned for Milestones 2–3. Its numbers come from the engine's real run of the synthetic example below.*</sub>
+<img alt="ChargePlan in a browser: a short intro, inputs on the left, and on the right the verdict 'Both vans ready for $8.40.', the night board of charging blocks, and a table of the same numbers" src="docs/images/app-desktop.jpg" width="100%">
 
-## Try it in 2 minutes
+<sub>*The real app (Milestone 2) on its built-in synthetic example. Phone layout: [docs/images/app-phone.jpg](docs/images/app-phone.jpg). Design rules: [DESIGN.md](DESIGN.md).*</sub>
 
-You need Python 3.12 or newer.
+## Run the web app
+
+You need Python 3.12+ and Node 20.19+ (or 22.12+). Use two terminals.
+
+**Terminal 1: the API** (Python, port 8000)
 
 ```bash
-git clone https://github.com/aryamanarora512/chargeplan.git
 cd chargeplan/backend
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements-dev.txt
+uvicorn chargeplan.api.app:app --reload
+```
 
+**Terminal 2: the web page** (React, port 5173)
+
+```bash
+cd chargeplan/frontend
+npm install
+npm run dev
+```
+
+Open **http://localhost:5173**. The example plan is already solved. Change a departure or a rate, then press
+**Plan tonight**. The API is documented in [docs/api.md](docs/api.md) and at http://127.0.0.1:8000/docs.
+
+## Use the engine without a browser
+
+```bash
+cd chargeplan/backend && source .venv/bin/activate
 python -m pytest -q                       # run the tests
 python -m chargeplan.cli                  # list the demo scenarios
 python -m chargeplan.cli hand_checkable   # plan one and print a report
@@ -39,18 +58,9 @@ STATUS: OPTIMAL
   Grid energy (kWh)            40.00       40.00
   Energy cost                  $4.80      $12.00
   Savings vs baseline   $7.20 (60.0%)
-  * Baseline = charging as soon as vehicles arrive, earliest departure first.
-
-Optimized schedule (kW per 30-minute slot; # = share of site limit):
-  Time    $/kWh     v1     v2   Total  Limit
-  23:30    0.30    0.0    0.0     0.0     10
-  00:00    0.12    0.0    0.0     0.0     10
-  00:30    0.12   10.0    0.0    10.0     10  ####################
-  01:00    0.12   10.0    0.0    10.0     10  ####################
-  ...
 
 What this means:
-  - All 2 vehicles can be ready by departure under these inputs.
+  - All 2 vans can be ready by departure.
   - The optimized plan draws 40.0 kWh from the grid to add 36.0 kWh to batteries (assuming 90% charging
     efficiency), for a modeled energy cost of $4.80. ...
   - Costs cover charging energy at the entered rates only (no demand charges, fixed fees or taxes),
@@ -120,12 +130,14 @@ measured night by night. Full results: [docs/analysis/summary.md](docs/analysis/
 
 ## Evaluation (measured, not estimated)
 
-- **Tests:** 100 passing (`python -m pytest -q`). They cover cost and efficiency arithmetic, every constraint, the worked
+- **Tests:** 112 backend tests (`python -m pytest -q`) and 14 frontend tests (`npm test`). The backend tests cover cost and efficiency arithmetic, every constraint, the worked
   example, flat rates, zero energy, impossible requests, baseline-fails-but-optimizer-succeeds, tariff gaps and overlaps,
   bad numbers, daylight-saving rejection, solver timeouts and errors, and totals matching the per-slot schedule.
   Constraint checks in the tests are written independently of the engine's own checker. The savings estimator adds
   tests for conservative time rounding, time-zone conversion, the timer baseline, comparable-nights-only savings, and
-  the bootstrap.
+  the bootstrap. The API tests check that changing a departure or a rate changes the result, and that bad input gets a
+  clear answer. The frontend tests cover placing clock times on the right date and the verdict text. The full browser
+  flow (edit, out of date, re-plan, new result) was checked by hand in desktop and phone layouts.
 - **Speed:** at the largest supported size (10 vehicles × 48 slots), the median `run_plan` time was **3.4 ms** and the
   slowest was **4.0 ms** over 100 runs. Measured on an Apple M3 Pro (18 GB) running macOS 26.3.1 with Python 3.13.5,
   NumPy 2.5.4, and SciPy 1.18.1, on 2026-10-15. The provisional target is under 2 s. Reproduce with `python -m chargeplan.benchmark`.
@@ -138,7 +150,7 @@ measured night by night. Full results: [docs/analysis/summary.md](docs/analysis/
 - No demand charges, fixed fees, taxes, solar, vehicle-to-grid, battery aging, or charging taper. **Costs are modeled
   charging-energy costs, not utility bills.**
 - No real charger control. Chargers have minimum currents and control limits this model ignores.
-- One depot, up to 10 vehicles, one window per vehicle, a dedicated charger per vehicle, and a horizon of up to 24 hours.
+- One depot, up to 10 vans, one window per van, a dedicated charger per van, and a night of up to 24 hours.
 - No nights with a daylight-saving change (rejected with a clear message).
 
 ## Project layout
@@ -155,6 +167,7 @@ backend/
       checks.py        independent schedule verification and simple impossibility proofs
       summary.py       costs, comparison, plain-language explanation
       planner.py       run_plan(): the one entry point that ties it all together
+    api/               FastAPI: a thin, stateless layer over run_plan (see docs/api.md)
     analysis/          savings estimator: replay many nights, bootstrap, charts
       tariffs.py       daily time-of-use tariffs (synthetic, PG&E BEV-1)
       sessions.py      session CSV -> one plan per night (conservative rounding)
@@ -166,8 +179,15 @@ backend/
     cli.py             terminal report
     benchmark.py       latency measurement
   tests/               pytest suite
+frontend/              React + TypeScript + Vite: one page, no UI library
+  src/plan.ts          form <-> API request (clock times placed inside the night)
+  src/format.ts        verdict text and board helpers
+  src/components/      PlanForm, Result, NightBoard
+  src/styles.css       tokens from DESIGN.md
+DESIGN.md              the UI design contract: colors, type, layout, exact copy
 docs/
   analysis/            demo savings report (synthetic data): summary.md + charts
+  api.md               endpoints, request and response examples
   data-sources.md      public datasets to analyze, real vs. synthetic
   product-brief.md     problem, customer hypotheses, alternatives, success criteria, wireframe
   problem-analysis.md  sharper problem statement, tested against a real EV tariff
@@ -184,8 +204,8 @@ docs/
 | 0 | Product brief and discovery plan | ✅ Done |
 | 1 | Python engine + tests | ✅ Done |
 | 1b | Savings estimator: multi-night replay, timer baseline, bootstrap, report charts | ✅ Done |
-| 2 | FastAPI + one editable React form, real results | Next |
-| 3 | Charts, error and infeasible states, comparison, CSV export, mobile layout | Planned |
+| 2 | FastAPI + one editable React page with real results, the night board, phone layout | ✅ Done |
+| 3 | CSV export, timer comparison in the app, smallest-power what-if, report charts on DESIGN.md tokens | Next |
 | 4 | Saved plans in PostgreSQL, Docker Compose, CI on the full stack | Planned |
 | 5 | Public demo (synthetic examples only, no saved data), demo script | Planned |
 

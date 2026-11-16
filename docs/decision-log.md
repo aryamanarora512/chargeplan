@@ -2,6 +2,46 @@
 
 Short entries: what we decided, why, and what would change our mind. Newest first.
 
+### 2026-11-15: Milestone 2 (working web slice)
+
+**One POST endpoint does everything.** `POST /api/plan` validates and solves in one call. A separate validate
+endpoint would only repeat it, because the engine already returns `status: "invalid"` with per-field messages.
+Pydantic rejects malformed JSON with a 422, but plan problems are never HTTP errors.
+
+**The browser never does time-zone math.** Every time stays a local-site string like `2026-10-15T18:00` and is
+compared as text. A `Date` object would silently shift times into the viewer's own zone. Rates and vans take clock
+times only, and `atClock()` places each one on the right date within the night (tested across midnight, a 24-hour
+night, and New Year).
+
+**Only one round of number checks in the browser.** The browser checks that numbers are numbers, so nothing
+unparseable is sent. Everything else, like "a van must leave after it arrives", stays in the engine. That's one
+source of truth for the rules, the same split Pydantic and `validate_plan` use on the server.
+
+**The engine's user-facing messages now use the app's words:** "van", "power limit", and "night".
+
+**No UI or chart library.** The night board is a CSS grid of plain elements. There are two runtime packages beyond
+React: the Barlow fonts, self-hosted so no font service is called. Tests use Node's built-in runner instead of Vitest,
+which also avoided an npm 10.9.2 installer bug with Vitest 5's optional peer packages.
+
+**A "Plan tonight" button, not live recalculation.** Edits mark the result "out of date" until the user presses
+the button. This keeps the person in control, makes it obvious which inputs produced which result, and avoids
+solving half-typed numbers.
+
+### 2026-11-15: UI design direction (proposed)
+
+**Design follows [avoid-ai-design](https://github.com/funboy322/avoid-ai-design), as requested.** The look comes from
+the depot's own world, not a dashboard template. The night runs left to right like a dispatch board, pricier hours are
+shaded like a tariff table, and charging is lit in sodium-lamp amber. The contract lives in `DESIGN.md`.
+
+**What the first wireframe got wrong:** a stock GitHub-blue button, a row of three KPI cards (L4), a bordered panel
+around every section (K2), and a system font with no chosen face (T1). The new one has none of these.
+
+**Minimal copy, and no tutorial.** The app opens with a two-line intro and an example plan already solved, so a new user
+sees what a result looks like before typing. The engine's long explanation sits behind "Why this plan".
+
+**The default example becomes `early_departure`.** One van leaves before the cheap hours, which shows the shared power
+limit and departures at a glance. The hand-checkable example's equally cheap schedules look scattered on the board.
+
 ### 2026-11-13: Savings estimator
 
 **"Predict savings" = replay history + bootstrap, not machine learning.** Given one night's inputs, the engine computes

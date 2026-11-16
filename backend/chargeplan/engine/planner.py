@@ -15,12 +15,12 @@ from .summary import Comparison, ScheduleSummary, compare, explain, summarize_sc
 from .validate import Issue, validate_plan
 
 COMBINED_CONFLICT = (
-    "Each vehicle could be ready on its own, but not all of them at once: they compete for the shared "
-    "EV charging allowance during overlapping hours. ChargePlan does not pinpoint one exact bottleneck."
+    "Each van could be ready on its own, but not all of them at once: they compete for the power limit "
+    "during the same hours. ChargePlan can't point to one exact bottleneck."
 )
 SUGGESTION = (
-    "Try one change and recalculate: a later departure, a smaller energy need, or a higher EV charging "
-    "allowance (only if one is already approved for your site). No edit is guaranteed to work until it has been re-solved."
+    "Try one change and plan again: a later departure, less energy, or a higher power limit (only if your site "
+    "already allows it). No change is guaranteed to work until it's re-planned."
 )
 
 
@@ -69,7 +69,7 @@ def run_plan(plan: PlanInput, time_limit_s: float = DEFAULT_TIME_LIMIT_S) -> Pla
             optimized = summarize_schedule("optimized", plan, slots, outcome.x, check)
         else:  # never trust a schedule that fails our own check
             status = "solver_error"
-            message = "Solver schedule failed independent verification: " + "; ".join(check.violations or ["not all vehicles ready"])
+            message = "Solver schedule failed independent verification: " + "; ".join(check.violations or ["not all vans ready"])
 
     reasons, suggestions = [], []
     if status == "infeasible":

@@ -1,0 +1,222 @@
+/* Tokens from DESIGN.md. Change a value there first, then here. */
+:root {
+  --ground: #f5f6f7;
+  --paper: #ffffff;
+  --ink: #121820;
+  --ink-hover: #2b3441;
+  --muted: #566069;
+  --rule: #d3d8dd;
+  --shade: #e6eaee;
+  --charge: #b8730c;
+  --short: #b42318;
+
+  --body: 'Barlow', Arial, sans-serif;
+  --cond: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  --radius: 3px;
+  --board-label: 88px;
+
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font: 16px/1.5 var(--body);
+}
+
+/* ---------- layout: intro, then inputs left and result right; one column on phones */
+
+.app {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 40px 40px 64px;
+  display: grid;
+  grid-template-columns: 400px minmax(0, 1fr);
+  grid-template-areas: 'intro intro' 'inputs result';
+  column-gap: 56px;
+  row-gap: 36px;
+}
+.intro { grid-area: intro; }
+.inputs { grid-area: inputs; }
+.result { grid-area: result; min-width: 0; }
+
+@media (max-width: 900px) {
+  .app {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'intro' 'result' 'inputs';
+    padding: 24px 16px 48px;
+    row-gap: 32px;
+  }
+}
+
+h1 {
+  margin: 0 0 8px;
+  font: 600 30px/1.1 var(--cond);
+}
+.intro p { margin: 0; max-width: 62ch; }
+
+/* ---------- inputs */
+
+fieldset { border: 0; margin: 0 0 28px; padding: 0; min-width: 0; }
+legend { padding: 0; margin-bottom: 10px; font: 600 17px/1.2 var(--cond); }
+
+.field { display: grid; gap: 4px; margin-bottom: 10px; }
+.label { font-size: 13px; color: var(--muted); }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: start; }
+
+input, select {
+  width: 100%;
+  min-width: 0;
+  min-height: 36px;
+  padding: 6px 9px;
+  font: 15px/1.3 var(--body);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+input[aria-invalid='true'], select[aria-invalid='true'] { border-color: var(--short); }
+
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.error { display: block; font-size: 13px; color: var(--short); margin: 2px 0 0; }
+
+.rows { display: grid; gap: 6px; align-items: center; margin-bottom: 6px; }
+.rows .row { display: contents; }
+.rows .row-error { grid-column: 1 / -1; margin-top: -2px; }
+.rates { grid-template-columns: 1fr 1fr 0.8fr 28px; }
+.vans { grid-template-columns: 1.2fr 1fr 1fr 0.75fr 0.75fr 28px; }
+.vans input, .rates input { padding: 6px 6px; }
+/* the clock icon doesn't fit these narrow fields; typing or the arrow keys still work */
+.rows input[type='time']::-webkit-calendar-picker-indicator { display: none; }
+
+button { font: inherit; cursor: pointer; }
+button:disabled { cursor: default; }
+
+.primary {
+  min-height: 40px;
+  padding: 9px 18px;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--paper);
+  background: var(--ink);
+  border: 0;
+  border-radius: var(--radius);
+}
+.primary:hover:not(:disabled) { background: var(--ink-hover); }
+.primary:disabled { opacity: 0.6; }
+
+.text {
+  padding: 6px 0;
+  font-size: 14px;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.text:hover:not(:disabled) { text-decoration-thickness: 2px; }
+.text:disabled { color: var(--muted); text-decoration: none; }
+
+.remove {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--muted);
+  background: none;
+  border: 0;
+}
+.remove:hover:not(:disabled) { color: var(--ink); }
+.remove:disabled { visibility: hidden; }
+
+.actions { display: flex; align-items: center; gap: 20px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .primary { transition: background-color 120ms ease; }
+  .result .verdict, .board, .table-wrap { transition: opacity 120ms ease; }
+}
+
+/* ---------- result */
+
+.state { margin: 0; min-height: 20px; font-size: 13px; color: var(--muted); }
+.verdict { margin: 4px 0 6px; font: 600 36px/1.15 var(--cond); }
+.verdict-line { margin: 0 0 4px; color: var(--muted); }
+.result.stale .verdict, .result.stale .board, .result.stale .table-wrap { opacity: 0.4; }
+
+/* the night board */
+.board { margin: 28px 0 0; }
+.board-grid { display: grid; }
+.board-price, .board-time {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: visible;
+}
+.board-time { padding-bottom: 4px; font-family: var(--cond); font-variant-numeric: tabular-nums; }
+.board-label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 8px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--rule);
+}
+.board-label.site { color: var(--muted); }
+.board-label small { font-size: 12px; }
+.board-cell {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  height: 44px;
+  padding: 6px 1px; /* the 1px sides leave a 2px gap between neighbouring blocks */
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+.board-cell.pricey { background: var(--shade); }
+.board-cell.away { background: var(--ground); }
+.board-cell.left { box-shadow: inset 2px 0 0 var(--ink); }
+.board-cell.site .block { opacity: 0.55; }
+.site-row { grid-column: 2 / -1; display: grid; position: relative; }
+.site-row::before { /* the limit: a full-height block touches this line */
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  border-top: 1px dashed var(--ink);
+}
+.block { display: block; width: 100%; background: var(--charge); }
+.left-label {
+  position: absolute;
+  z-index: 1; /* above the cells that follow */
+  top: 50%;
+  left: 8px;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* the same numbers as a table */
+.table-wrap { margin-top: 28px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+th { font-weight: 400; font-size: 13px; color: var(--muted); text-align: left; }
+th, td { padding: 8px 16px 8px 0; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+.short { color: var(--short); }
+@media (max-width: 520px) {
+  .wide { display: none; } /* the total cost is in the headline; status shows any shortfall */
+}
+
+details { margin-top: 20px; }
+summary { cursor: pointer; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
+details ul { margin: 10px 0 0; padding-left: 18px; color: var(--muted); font-size: 14px; max-width: 70ch; }
+details li { margin-bottom: 4px; }
+
+.footnote { margin: 28px 0 0; font-size: 13px; color: var(--muted); }

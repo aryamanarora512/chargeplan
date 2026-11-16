@@ -54,6 +54,6 @@ def test_checker_flags_broken_limits():
     x[:, 0] = 5.0  # 2 x 5 kWh in 30 min = 20 kW, above the 10 kW site limit
     x[0, 1] = 50.0  # far above the van's 10 kW charger
     violations = " ".join(check_schedule(plan, slots, avail, x).violations)
-    assert "site allowance" in violations
+    assert "power limit" in violations
     assert "charger limit" in violations
     assert "more energy than requested" in violations

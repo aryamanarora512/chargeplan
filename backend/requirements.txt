@@ -1,7 +1,10 @@
-# Runtime dependencies (versions tested on 2026-11-13).
+# Runtime dependencies (versions tested on 2026-11-15).
 # Planning engine:
 numpy==2.5.4
 scipy==1.18.1
+# HTTP API:
+fastapi==0.163.1
+uvicorn==0.54.0
 # Savings analysis and report charts:
 pandas==3.1.1
 matplotlib==3.11.2

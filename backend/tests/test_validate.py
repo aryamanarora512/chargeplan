@@ -28,7 +28,7 @@ def test_rate_gap_is_reported():
 
 def test_rate_overlap_is_reported():
     rates = [RateBand(t(START), t("2026-10-16 01:00"), 0.3), RateBand(t("2026-10-16 00:00"), t(END), 0.1)]
-    assert "overlaps another band" in messages(plan_for(START, END, rates=rates))
+    assert "overlaps another rate" in messages(plan_for(START, END, rates=rates))
 
 
 def test_rates_must_reach_the_end_of_the_horizon():
@@ -38,7 +38,7 @@ def test_rates_must_reach_the_end_of_the_horizon():
 
 def test_rate_band_outside_horizon_is_rejected():
     rates = [RateBand(t("2026-10-15 17:00"), t(END), 0.3)]
-    assert "outside the planning horizon" in messages(plan_for(START, END, rates=rates))
+    assert "runs outside the night" in messages(plan_for(START, END, rates=rates))
 
 
 def test_rates_in_any_order_are_accepted_when_they_tile_the_horizon():
@@ -105,18 +105,18 @@ def test_seconds_are_not_silently_rounded():
 
 def test_departure_must_follow_arrival():
     plan = plan_for(START, END, vehicles=[van("v1", "2026-10-16 02:00", "2026-10-16 01:00", 10, 7)])
-    assert "Departure must be after arrival" in messages(plan)
+    assert "must leave after it arrives" in messages(plan)
 
 
 def test_vehicle_must_fit_inside_horizon():
     plan = plan_for(START, END, vehicles=[van("v1", START, "2026-10-16 09:00", 10, 7)])
-    assert "within the planning horizon" in messages(plan)
+    assert "within the night" in messages(plan)
 
 
 def test_at_least_one_and_at_most_ten_vehicles():
-    assert "Add at least one vehicle" in messages(plan_for(START, END, vehicles=[]))
+    assert "Add at least one van" in messages(plan_for(START, END, vehicles=[]))
     eleven = [van(f"v{i}", START, END, 1, 7) for i in range(11)]
-    assert "at most 10 vehicles" in messages(plan_for(START, END, vehicles=eleven))
+    assert "at most 10 vans" in messages(plan_for(START, END, vehicles=eleven))
 
 
 def test_vehicle_ids_must_be_unique():
