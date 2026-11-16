@@ -1,4 +1,4 @@
-# ChargePlan
+# ChargePlan 
 
 **Plan tonight's EV charging for a small fleet: will every van be ready, and what will it cost?**
 
